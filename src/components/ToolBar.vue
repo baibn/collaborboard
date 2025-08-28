@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCanvas } from '@/composables/useCanvas'
-const { color, width, tool, clear, undo } = useCanvas()
+const { color, width, tool, clear, undo, saveAsPNG } = useCanvas()
 </script>
 
 <template>
@@ -40,6 +40,7 @@ const { color, width, tool, clear, undo } = useCanvas()
     </div>
     <button @click="undo">撤销 Ctrl+Z</button>
     <button @click="clear" class="clear-btn">🗑️ 清空</button>
+    <button @click="saveAsPNG">保存 PNG</button>
   </div>
 </template>
 <style scoped>

@@ -77,6 +77,13 @@ export function useCanvas() {
       redraw() // 实时重画
     }
   }
+  const saveAsPNG = () => {
+    const canvas = document.getElementById('board') as HTMLCanvasElement
+    const link = document.createElement('a')
+    link.download = `board-${Date.now()}.png`
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }
 
   const stop = () => {
     isDrawing.value = false
@@ -109,6 +116,7 @@ export function useCanvas() {
     stop,
     undo,
     clear,
+    saveAsPNG,
     isDrawing,
     lines,
   }
