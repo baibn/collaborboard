@@ -4,6 +4,7 @@ import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
 const doc = new Y.Doc()
+//历史画线数据
 const yLines = doc.getArray<Line>('lines')
 const provider = new WebsocketProvider('ws://localhost:1234', 'my-room', doc)
 
