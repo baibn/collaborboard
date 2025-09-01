@@ -1,16 +1,17 @@
+import { collabStore } from '@/stores/collab'
 import type { Line } from '@/types'
 import { ref } from 'vue'
+const { lines, addLine, saveState, clear } = collabStore() // 2. 用共享数组
 
 // 全局状态 - 单例模式
 const isDrawing = ref(false)
 const color = ref('#000000')
 const width = ref(3)
 const tool = ref<'pen' | 'eraser'>('pen')
-const lines = ref<Line[]>([])
 /* 历史栈 */
 const history = ref<Line[][]>([])
-const saveState = () =>
-  history.value.push(JSON.parse(JSON.stringify(lines.value)))
+// const saveState = () =>
+//   history.value.push(JSON.parse(JSON.stringify(lines.value)))
 
 let ctx!: CanvasRenderingContext2D
 
@@ -59,12 +60,19 @@ export function useCanvas() {
   const start = (e: MouseEvent) => {
     saveState()
     isDrawing.value = true
-    lines.value.push({
+    // lines.value.push({
+    //   points: [{ x: e.offsetX, y: e.offsetY }],
+    //   color: color.value,
+    //   width: width.value,
+    //   tool: tool.value,
+    // })
+    const line: Line = {
       points: [{ x: e.offsetX, y: e.offsetY }],
       color: color.value,
       width: width.value,
       tool: tool.value,
-    })
+    }
+    addLine(line)
     // 立即绘制起始点
     redraw()
   }
