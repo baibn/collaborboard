@@ -97,14 +97,16 @@ export function useCanvas() {
     isDrawing.value = false
   }
 
-  const clear = () => {
-    lines.value = []
-    if (ctx) {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      // 重置绘制状态
-      ctx.globalCompositeOperation = 'source-over'
-    }
-  }
+  // const clear = () => {
+  //   lines.value = []
+  //   if (ctx) {
+  //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  //     // 重置绘制状态
+  //     ctx.globalCompositeOperation = 'source-over'
+  //   }
+  // }
+  const clearCanvas = () => clear()
+
   const undo = () => {
     if (history.value.length === 0) return
     history.value.pop()
@@ -123,7 +125,7 @@ export function useCanvas() {
     move,
     stop,
     undo,
-    clear,
+    clear: clearCanvas,
     saveAsPNG,
     isDrawing,
     lines,
