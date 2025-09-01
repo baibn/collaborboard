@@ -1,4 +1,4 @@
-import WebSocket, { WebSocketServer } from 'ws'
+import { WebSocketServer } from 'ws'
 
 const PORT = 1234
 const wss = new WebSocketServer({ port: PORT })
@@ -14,15 +14,17 @@ wss.on('connection', (ws, req) => {
   )
 
   ws.on('message', (msg) => {
-    const displayMsg = msg.toString().slice(0, 100) // 只显示前100字符
-    console.log(`[MESSAGE] From ${clientId}: ${displayMsg}`)
+    const isBinary = Buffer.isBuffer(msg)
+    const len = msg.length
+    const display = isBinary
+      ? `<binary ${len} bytes> 0x${msg.slice(0, 16).toString('hex')}`
+      : msg.toString().slice(0, 100)
 
-    // 广播给其他客户端
-    for (const client of clients) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(msg)
-      }
-    }
+    console.log(
+      `[MESSAGE] From ${clientId} (${
+        isBinary ? 'binary' : 'text'
+      }) ${len} bytes: ${display}`
+    )
   })
 
   ws.on('close', () => {
