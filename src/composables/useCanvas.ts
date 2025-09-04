@@ -1,7 +1,7 @@
 import { collabStore } from '@/stores/collab'
 import type { Line } from '@/types'
 import { ref } from 'vue'
-const { lines, addLine, saveState, clear } = collabStore() // 2. 用共享数组
+const { lines, addLine, saveState, clear: clearCanvas } = collabStore() // 2. 用共享数组
 
 // 全局状态 - 单例模式
 const isDrawing = ref(false)
@@ -105,15 +105,19 @@ export function useCanvas() {
   //     ctx.globalCompositeOperation = 'source-over'
   //   }
   // }
-  const clearCanvas = () => clear()
+  const clear = () => clearCanvas()
+
+  // const undo = () => {
+  //   if (history.value.length === 0) return
+  //   history.value.pop()
+  //   lines.value = history.value.length
+  //     ? history.value[history.value.length - 1]
+  //     : []
+  //   redraw()
+  // }
 
   const undo = () => {
-    if (history.value.length === 0) return
-    history.value.pop()
-    lines.value = history.value.length
-      ? history.value[history.value.length - 1]
-      : []
-    redraw()
+    clearCanvas()
   }
 
   return {
@@ -125,7 +129,7 @@ export function useCanvas() {
     move,
     stop,
     undo,
-    clear: clearCanvas,
+    clear,
     saveAsPNG,
     isDrawing,
     lines,

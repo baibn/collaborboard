@@ -17,16 +17,18 @@ export const collabStore = () => {
   const saveState = () => history.value.push(yLines.toArray())
 
   const addLine = (line: Line) => yLines.push([line])
-  const clear = () => yLines.delete(0, yLines.length)
-
-  /* 撤销：从历史栈恢复 Yjs */
   const undo = () => {
     if (history.value.length === 0) return
     history.value.pop()
-    const prev = history.value[lines.value.length - 1]
     yLines.delete(0, yLines.length)
+    const prev = history.value[lines.value.length - 1] ?? []
     prev.forEach((l) => yLines.push([l]))
   }
 
-  return { lines, addLine, clear, saveState, undo }
+  const clearCanvas = () => {
+    saveState()
+    yLines.delete(0, yLines.length)
+  }
+
+  return { lines, addLine, clear: clearCanvas, saveState, undo }
 }
