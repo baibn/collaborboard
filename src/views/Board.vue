@@ -14,11 +14,13 @@ onMounted(() => {
   addLine({ points: [], color: '#000', width: 3, tool: 'pen' }) // 初始化房间
 })
 
+console.log(user.value)
+
 const room = route.params.room as string
 </script>
 
 <template>
-  <h1>Room: {{ room }} | 用户: {{ user?.email ?? '未登录' }}</h1>
+  <h1>Room: {{ room }} | 用户: {{ user?.email }}</h1>
   <ToolBar></ToolBar>
   <CanvasBoard />
 </template>

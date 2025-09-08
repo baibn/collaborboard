@@ -9,7 +9,8 @@ const email = ref(''),
   password = ref('')
 
 const onLogin = async () => {
-  const { error } = await login(email.value, password.value)
+  const { data, error } = await login(email.value, password.value)
+  console.log('login data', data)
   if (!error) router.push('/board/room1')
 }
 </script>

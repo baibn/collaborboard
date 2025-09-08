@@ -6,10 +6,8 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_KEY
 )
-
+const user = ref<User | null>(null)
 export const useAuth = () => {
-  const user = ref<User | null>(null)
-
   const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -18,7 +16,8 @@ export const useAuth = () => {
     if (!error && data.user) {
       user.value = data.user // ← 立即赋值
     }
-    return { error }
+    console.log('login user', user)
+    return { error, data }
   }
   const logout = () => supabase.auth.signOut()
 
