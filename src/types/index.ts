@@ -9,3 +9,10 @@ export interface Line {
   width: number
   tool: Tool
 }
+export interface Sticky {
+  id: string
+  x: number
+  y: number
+  text: string
+  color: string
+}

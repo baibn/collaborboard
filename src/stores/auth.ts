@@ -7,6 +7,7 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_KEY
 )
 const user = ref<User | null>(null)
+
 export const useAuth = () => {
   const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
