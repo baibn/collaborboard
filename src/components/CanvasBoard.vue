@@ -1,15 +1,40 @@
 <script setup lang="ts">
 import { useCanvas } from '@/composables/useCanvas'
-import { onMounted, ref } from 'vue'
+import { useDrag } from '@/composables/useDrag'
+import { stickyStore } from '@/stores/sticky'
+import type { Sticky } from '@/types'
+import { onMounted, onUnmounted, ref } from 'vue'
+import StickyNote from './StickyNote.vue'
 
 const canvasRef = ref<HTMLCanvasElement>()
 const { initCtx, start, move, stop, tool } = useCanvas()
+const { onMouseDown, onMouseMove, onMouseUp } = useDrag()
+const { stickies, addSticky, updateSticky } = stickyStore()
 
 onMounted(() => {
-  if (canvasRef.value) {
-    initCtx(canvasRef.value)
-  }
+  const el = canvasRef.value
+  if (!el) return
+  initCtx(el)
+
+  window.addEventListener('mousemove', onMouseMove)
+  window.addEventListener('mouseup', onMouseUp)
+  // 组件卸载时顺手把监听清掉，防止内存泄漏
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', onMouseUp)
+  })
 })
+
+/* 双击空白处新建便签 */
+const onDblClick = (e: MouseEvent) => {
+  addSticky({
+    id: crypto.randomUUID(),
+    x: e.offsetX,
+    y: e.offsetY,
+    text: '新便签',
+    color: '#ffeb3b',
+  })
+}
 </script>
 
 <template>
@@ -23,8 +48,18 @@ onMounted(() => {
       @mousemove="move"
       @mouseup="stop"
       @mouseleave="stop"
+      @dblclick="onDblClick"
       :class="{ 'eraser-cursor': tool === 'eraser' }"
       class="drawing-canvas"
+    />
+  </div>
+  <div>
+    <StickyNote
+      v-for="s in stickies"
+      :key="s.id"
+      :sticky="s"
+      @mousedown="(e: MouseEvent) => onMouseDown(e, s)"
+      @update="(s: Sticky) => updateSticky(s)"
     />
   </div>
 </template>
